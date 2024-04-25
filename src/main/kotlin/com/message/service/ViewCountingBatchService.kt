@@ -30,11 +30,9 @@ class ViewCountingBatchService(
      */
     @Scheduled(fixedDelay = 200L)
     fun applyViewCount() {
-        for ((key, value) in countMap) {
-            viewCountUpdateService.updateViewCount(key, value)
-            countMap.merge(key, value) { currentValue, oldValue ->
-                currentValue - oldValue
-            }
+        for (key in countMap.keys()) {
+            val value = countMap.remove(key)
+            viewCountUpdateService.updateViewCount(key, value!!)
         }
     }
 }
